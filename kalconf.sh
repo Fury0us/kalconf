@@ -1,8 +1,27 @@
 #!/bin/bash
+asci_intro() {
+echo $'\e[31m'
+cat << EOF
+
+ ██ ▄█▀▄▄▄       ██▓    ▄████▄  ▒█████   ███▄    █   █████▒
+ ██▄█▒▒████▄    ▓██▒   ▒██▀ ▀█ ▒██▒  ██▒ ██ ▀█   █ ▓██   ▒ 
+▓███▄░▒██  ▀█▄  ▒██░   ▒▓█    ▄▒██░  ██▒▓██  ▀█ ██▒▒████ ░ 
+▓██ █▄░██▄▄▄▄██ ▒██░   ▒▓▓▄ ▄██▒██   ██░▓██▒  ▐▌██▒░▓█▒  ░ 
+▒██▒ █▄▓█   ▓██▒░██████▒ ▓███▀ ░ ████▓▒░▒██░   ▓██░░▒█░    
+▒ ▒▒ ▓▒▒▒   ▓▒█░░ ▒░▓  ░ ░▒ ▒  ░ ▒░▒░▒░ ░ ▒░   ▒ ▒  ▒ ░    
+░ ░▒ ▒░ ▒   ▒▒ ░░ ░ ▒  ░ ░  ▒    ░ ▒ ▒░ ░ ░░   ░ ▒░ ░      
+░ ░░ ░  ░   ▒     ░ ░  ░       ░ ░ ░ ▒     ░   ░ ░  ░ ░    
+░  ░        ░  ░    ░  ░ ░         ░ ░           ░         
+EOF
+echo $'\e[0m'
+}
 main_menu() {
+asci_intro
+echo $'\e[1;31m'
         PS3=("main: ")
-        main=("edit zsh/bash rc file" "add scripts to bashrc/zshrc" "add neofetch to rc" "add a custom neofetch art")
-        select main in "${main[@]}"; do
+        main=("edit zsh/bash rc file" "add scripts to bashrc/zshrc" "add neofetch to rc" "add a custom neofetch art" "exit")
+        COLUMNS=12
+	select main in "${main[@]}"; do
         case $main in
         "edit zsh/bash rc file")
         zsh_bash_rc
@@ -16,8 +35,13 @@ main_menu() {
 	"add a custom neofetch art")
 	nf_custom
 	;;
+	"exit")
+	clear &&
+	exit
+	;;
 esac
 done
+echo $'\e[0m'
 }
 zsh_bash_rc() {
 if [ $SHELL = "/usr/bin/bash" ]
@@ -35,19 +59,19 @@ fi
 bsh_zsh_addscr() {
 if [ $SHELL = "/usr/bin/bash" ]
 then
-	read -p $'\e[1;31mEnter path to script you wish to add(include quotations): \e[0m' addedscr
+	read -p $'\e[1;31mpath to script you wish to add(include single quotations): \e[0m' addedscr
 	echo -en '\n'
 	read -p $'\e[1;31mAlias for the script?(name to get it to run): \e[0m' alias
 	echo -en '\n'
-	echo "alias $alias=$addedscr" >> ~/.bashrc
+	echo "alias $alias='$addedscr'" >> ~/.bashrc
 	echo "Script has been added to .rc file!, to run, type $alias"
 elif [ $SHELL = "/usr/bin/zsh" ]
 then
-        read -p $'\e[1;31mEnter path to script you wish to add(include quotations): \e[0m' addedscr
+        read -p $'\e[1;31mpath to script you wish to add?: \e[0m' addedscr
         echo -en '\n'
         read -p $'\e[1;31mAlias for the script?(name to get it to run): \e[0m' alias
         echo -en '\n'
-        echo "alias $alias=$addedscr" >> ~/.zshrc
+        echo "alias $alias='$addedscr'" >> ~/.zshrc
 	echo "Script has been added to .rc file!, to run, type $alias"
 fi
 }
